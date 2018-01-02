@@ -5,15 +5,15 @@ namespace App\Model;
 class OrdersMapPoints extends \App\Mvc\DateTrackingModel
 {
     public $id;
-    public $userId;
     public $orderId;
     public $adress;
     public $lat;
     public $lon;
+    public $sort;
 
     public function getSource()
     {
-        return 'OrdersMapPoints';
+        return 'orders_map_points';
     }
 
     public function columnMap()
@@ -24,6 +24,7 @@ class OrdersMapPoints extends \App\Mvc\DateTrackingModel
             'adress' => 'adress',
             'lat' => 'lat',
             'lon' => 'lon',
+            'sort' => 'sort'
         ];
     }
     public function initialize()
@@ -33,8 +34,19 @@ class OrdersMapPoints extends \App\Mvc\DateTrackingModel
         ]);
     }
 
-    public function create($routePoints, $orderId)
+    public function add(array $routePoints, int $orderId) :array 
     {
-
+        $routePointsArray = [];
+        foreach ($routePoints as $point) {
+            $routePoint = new OrdersMapPoints();
+            $routePoint->lat     = $point->lat;
+            $routePoint->lon     = $point->lon;
+            $routePoint->sort     = $point->sort;
+            $routePoint->adress  = $point->adress;
+            $routePoint->orderId = $orderId;
+            $routePoint->save();
+            $routePointsArray[] = $routePoint;
+        }
+        return $routePointsArray;
     }
 }

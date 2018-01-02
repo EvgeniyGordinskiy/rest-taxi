@@ -2,7 +2,7 @@
 
 namespace App\Collections;
 
-use App\Controllers\UserControllers\Auth\AuthController;
+use App\Controllers\Auth\AuthController;
 use PhalconRest\Api\ApiCollection;
 use PhalconRest\Api\ApiEndpoint;
 
@@ -14,6 +14,7 @@ class AuthCollection extends ApiCollection
             ->name('Auth')
             ->handler(AuthController::class)
             ->endpoint(ApiEndpoint::post('/apiv1/authenticate', 'authenticate'))
-            ->endpoint(ApiEndpoint::post('/apiv1/register', 'registerUser'));
+            ->endpoint(ApiEndpoint::post('/apiv1/registerUser', 'registerUser'))
+            ->endpoint(ApiEndpoint::post('/apiv1/registerDriver', 'registerDriver'));
     }
 }

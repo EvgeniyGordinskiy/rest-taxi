@@ -27,8 +27,8 @@ DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -43,8 +43,8 @@ CREATE TABLE `users` (
   `country_id` varchar(255) DEFAULT NULL,
   `key` varchar(255) NOT NULL,
   `token` varchar(16) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -53,8 +53,8 @@ DROP TABLE IF EXISTS `users_roles`;
 CREATE TABLE `users_roles` (
   `user_id` integer unsigned,
   `role_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY(role_id)  references roles(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -73,8 +73,8 @@ CREATE TABLE `cars` (
   `planting_costs` varchar(50) NOT NULL,
   `costs_per_1` varchar(50) NOT NULL,
   `car_photo` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -85,8 +85,8 @@ CREATE TABLE `regions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `code` varchar(10) DEFAULT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+   `created_at` datetime DEFAULT now(),
+   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -95,8 +95,8 @@ DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -106,8 +106,8 @@ DROP TABLE IF EXISTS `order_statuses`;
 CREATE TABLE `order_statuses` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -124,33 +124,33 @@ CREATE TABLE `orders` (
    FOREIGN KEY(car_id)  references cars(id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY(driver_id)  references drivers(id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY(country_id)  references countries(id) ON UPDATE CASCADE ON DELETE CASCADE,
-   FOREIGN KEY(passanger_id)  references user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+   FOREIGN KEY(passanger_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY(region_id)  references regions(id) ON UPDATE CASCADE ON DELETE CASCADE,
    FOREIGN KEY(status_id)  references order_statuses(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `order_detail`;
+DROP TABLE IF EXISTS `order_details`;
 
-CREATE TABLE `order_detail` (
+CREATE TABLE `order_details` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` integer unsigned,
   `baby_chair` varchar(10) DEFAULT '',
   `duration` varchar(10) DEFAULT '',
   `callMe` ENUM('0','1') DEFAULT '0',
   `pets` ENUM('0','1') DEFAULT '0',
-  `differed_payment` TINYINT(2) unsigned,
-  `large` TINYINT(2) unsigned,
-  `pass_count` TINYINT(2) unsigned,
-  `pass_phone` varchar(255) NOT NULL,
+  `differed_payment` TINYINT(2) unsigned DEFAULT NULL,
+  `large` TINYINT(2) unsigned DEFAULT NULL,
+  `pass_count` TINYINT(2) unsigned DEFAULT NULL,
+  `pass_phone` varchar(255) DEFAULT NULL,
   `extension` TIME DEFAULT NULL,
   `start_time` DATETIME DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL,
   FOREIGN KEY(order_id)  references orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -160,11 +160,10 @@ CREATE TABLE `users_map_point_orders` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` integer unsigned,
   `order_id` integer unsigned,
-  `adress` varchar(255) NOT NULL,
   `lat` DECIMAL(9,6) NOT NULL,
   `lon` DECIMAL(9,6) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY(order_id)  references orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (`id`)
@@ -178,8 +177,9 @@ CREATE TABLE `orders_map_points` (
   `adress` varchar(255) NOT NULL,
   `lat` DECIMAL(9,6) NOT NULL,
   `lon` DECIMAL(9,6) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `sort` integer NOT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY(order_id)  references orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

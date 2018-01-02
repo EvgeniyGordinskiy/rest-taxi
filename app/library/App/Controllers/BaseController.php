@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Traits\HttpBoxTrait;
 use App\Traits\ValidatorTrait;
 use PhalconRest\Mvc\Controllers\CrudResourceController;
 

@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `wishes`;
 CREATE TABLE `wishes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT now(),
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -33,35 +33,12 @@ CREATE TABLE `wishes` (
 LOCK TABLES `wishes` WRITE;
 /*!40000 ALTER TABLE `wishes` DISABLE KEYS */;
 
-INSERT INTO `wishes` (`name`,  `created_at`)
+INSERT INTO `wishes` (`name`)
 VALUES
-	('wish1', now()),
-	('wish2', now());
+	('wish 1'),
+	('wish 2');
 
 /*!40000 ALTER TABLE `wishes` ENABLE KEYS */;
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `users_wishes`;
-
-CREATE TABLE `users_wishes` (
-  `user_id` integer unsigned,
-  `wish_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY(wish_id)  references wishes(id) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-LOCK TABLES `users_wishes` WRITE;
-/*!40000 ALTER TABLE `users_wishes` DISABLE KEYS */;
-
-INSERT INTO `users_wishes` (`user_id`, `wish_id`)
-VALUES
-	(1,1),
-	(1,2);
-
-/*!40000 ALTER TABLE `users_wishes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `payment_types`;
@@ -69,7 +46,7 @@ DROP TABLE IF EXISTS `payment_types`;
 CREATE TABLE `payment_types` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT now(),
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -77,37 +54,13 @@ CREATE TABLE `payment_types` (
 LOCK TABLES `payment_types` WRITE;
 /*!40000 ALTER TABLE `payment_types` DISABLE KEYS */;
 
-INSERT INTO `payment_types` (`name`,  `created_at`)
+INSERT INTO `payment_types` (`name`)
 VALUES
-	('cash', now()),
-	('card', now());
+	('cash'),
+	('card');
 
 /*!40000 ALTER TABLE `payment_types` ENABLE KEYS */;
 UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `orders_payments`;
-
-CREATE TABLE `orders_payments` (
-  `order_id` integer unsigned,
-  `payment_type_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  FOREIGN KEY(order_id)  references orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY(payment_type_id)  references payment_types(id) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-LOCK TABLES `orders_payments` WRITE;
-/*!40000 ALTER TABLE `orders_payments` DISABLE KEYS */;
-
-INSERT INTO `orders_payments` (`order_id`, `payment_type_id`)
-VALUES
-	(1,1),
-	(1,2);
-
-/*!40000 ALTER TABLE `orders_payments` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 DROP TABLE IF EXISTS `cars`;
 
@@ -123,8 +76,8 @@ CREATE TABLE `cars` (
   `planting_costs` varchar(50) NOT NULL,
   `costs_per_1` varchar(50) NOT NULL,
   `car_photo` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -145,50 +98,28 @@ CREATE TABLE `countries` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `code` varchar(10) NOT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `countries` WRITE;
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
 
-INSERT INTO `countries` (`id`, `name`, `created_at`, `code`)
+INSERT INTO `countries` (`id`, `name`, `code`)
 VALUES
-	(13, 'Ukraine', now(), 'UA'),
-    (4, 'Moldova', now(), 'MD');
+	(13, 'Ukraine', 'UA'),
+    (4, 'Moldova', 'MD');
     	/*!40000 ALTER TABLE `countries` ENABLE KEYS */;
 UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `drivers`;
-
-CREATE TABLE `drivers` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `drivers` WRITE;
-/*!40000 ALTER TABLE `drivers` DISABLE KEYS */;
-
-INSERT INTO `drivers` (`user_id`)
-VALUES
-	(1);
-    	/*!40000 ALTER TABLE `drivers` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 DROP TABLE IF EXISTS `regions`;
 
 CREATE TABLE `regions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `code` varchar(10) DEFAULT NULL,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+   `created_at` datetime DEFAULT now(),
+   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -199,6 +130,47 @@ INSERT INTO `regions` (`name`)
 VALUES
 	('Dnipropetrovska');
     	/*!40000 ALTER TABLE `regions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `order_statuses`;
+
+CREATE TABLE `order_statuses` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `order_statuses` WRITE;
+/*!40000 ALTER TABLE `order_statuses` DISABLE KEYS */;
+
+INSERT INTO `order_statuses` (`name`)
+VALUES
+	('Not confirmed by driver'),
+	('The driver is coming to you');
+    	/*!40000 ALTER TABLE `order_statuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `roles`;
+
+CREATE TABLE `roles` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL UNIQUE,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+
+INSERT INTO `roles` (`name`)
+VALUES
+	('user'),
+	('driver');
+    	/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

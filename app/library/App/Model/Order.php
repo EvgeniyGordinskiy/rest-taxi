@@ -13,11 +13,12 @@ class Order extends \App\Mvc\DateTrackingModel
     public $statusId;
     public $createdAt;
     public $updatedAt;
-    
+
+    public static $NOT_CONFIRMED_BY_DRIVER = 1;
 
     public function getSource()
     {
-        return 'order';
+        return 'orders';
     }
 
     public function columnMap()
@@ -62,7 +63,7 @@ class Order extends \App\Mvc\DateTrackingModel
         ]);
     }
     
-    public function create($carId, $countryId, $driverId, $passangerId, $regionId)
+    public function add(int $carId, int $countryId, int $driverId, int $passangerId, int $regionId) :Order
     {
         $order = new Order();
         $order->carId = $carId;
@@ -70,9 +71,8 @@ class Order extends \App\Mvc\DateTrackingModel
         $order->driverId = $driverId;
         $order->passangerId = $passangerId;
         $order->regionId = $regionId;
-        $order->status = 0;
+        $order->statusId = Order::$NOT_CONFIRMED_BY_DRIVER;
         $order->save();
-        
-        return 'mo';
+        return $order;
     }
 }

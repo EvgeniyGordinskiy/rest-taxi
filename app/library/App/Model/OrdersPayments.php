@@ -35,11 +35,12 @@ class OrdersPayments extends \App\Mvc\DateTrackingModel
         ]);
     }
     
-    public function create($paymentTypeId, $orderId) 
+    public function add(int $paymentTypeId, int $orderId) :OrdersPayments
     {
         $payment = new OrdersPayments();
-        $payment->orderId = $orderId;
+        $payment->orderId       = $orderId;
         $payment->paymentTypeId = $paymentTypeId;
         $payment->save();
+        return $payment;
     }
 }

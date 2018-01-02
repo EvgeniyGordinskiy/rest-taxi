@@ -27,36 +27,38 @@ DROP TABLE IF EXISTS `wishes`;
 CREATE TABLE `wishes` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `users_wishes`;
+DROP TABLE IF EXISTS `order_wishes`;
 
-CREATE TABLE `users_wishes` (
-  `user_id` integer unsigned,
+CREATE TABLE `order_wishes` (
+  `order_id` integer unsigned,
   `wish_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY(order_id)  references orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY(wish_id)  references wishes(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `payment_types`;
 
 CREATE TABLE `payment_types` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `orders_payments` (
   `order_id` integer unsigned,
   `payment_type_id` integer unsigned,
-  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT NULL,
-  FOREIGN KEY(user_id)  references users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  `created_at` datetime DEFAULT now(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY(order_id)  references orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY(payment_type_id)  references payment_types(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

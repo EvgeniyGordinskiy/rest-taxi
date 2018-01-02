@@ -25,6 +25,17 @@ class DateTrackingModel extends \Phalcon\Mvc\Model
     {
         $this->updatedAt = date('Y-m-d H:i:s');
     }
-    
-    
+
+
+    public function toArray($columns = NULL)
+    {
+        $array = parent::toArray();
+        $result = [];
+        foreach ($array as $key => $item) {
+            $result[ lcfirst(basename(str_replace('\\','/', static::class))).'_'.$key] = $item;
+        }
+
+        return $result;
+    }
+ 
 }

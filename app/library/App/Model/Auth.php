@@ -32,12 +32,12 @@ class Auth extends \App\Mvc\DateTrackingModel
                     $newUser ->password   =  md5($password);
                     $newUser ->key        =  $key;
                     $newUser -> token     =  $access_token;
-                    $newUser -> roleId     =  1;
+                    $newUser -> roleId     =  $roleId;
                     $newUser->createdAt   = date('Y-m-d H:i:s');
                     $newUser->updatedAt   = $newUser->createdAt;
                     $newUser ->save();
                 }else{
-                    return 'Role - user not found';
+                    return 'Role "user" is not found';
                 }
             } catch (\Exception $e) {
                 return $e->getMessage()." in file ".$e->getFile()." on line ".$e->getLine();

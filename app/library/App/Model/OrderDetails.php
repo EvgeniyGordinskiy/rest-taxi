@@ -8,6 +8,7 @@ namespace App\Model;
     public $orderId;
     public $babyChair;
     public $callMe;
+    public $duration;
     public $pets;
     public $differedPayment;
     public $large;
@@ -21,7 +22,7 @@ namespace App\Model;
     
     public function getSource()
     {
-        return 'orderDetails';
+        return 'order_details';
     }
 
     public function columnMap()
@@ -32,6 +33,7 @@ namespace App\Model;
             'baby_chair' => 'babyChair',
             'callMe' => 'callMe',
             'pets' => 'pets',
+            'duration' => 'duration',
             'differed_payment' => 'differedPayment',
             'large' => 'large',
             'pass_count' => 'passCount',
@@ -48,10 +50,24 @@ namespace App\Model;
         ]);
     }
 
-    public function create($orderId, $babyChair, $callMe, $comment, $deffered_payment, $duration,
+    public function add($orderId, $babyChair, $callMe, $comment, $deffered_payment, $duration,
                              $extension, $large, $passCount, $passPhone, $pets, $startTime)
     {
-
-         return 'mo';
+        $orderDetails = new OrderDetails();
+        $orderDetails->pets            = $pets;
+        $orderDetails->large           = $large;
+        $orderDetails->callMe          = $callMe;
+        $orderDetails->orderId         = $orderId;
+        $orderDetails->comment         = $comment;
+        $orderDetails->duration        = $duration;
+        $orderDetails->babyChair       = $babyChair;
+        $orderDetails->extension       = $extension;
+        $orderDetails->passCount       = $passCount;
+        $orderDetails->passPhone       = $passPhone;
+        $orderDetails->startTime       = $startTime;
+        $orderDetails->differedPayment = $deffered_payment;
+        $orderDetails->save();
+        return $orderDetails;
     }
+
 }

@@ -2,7 +2,7 @@
 
 namespace App\Validate;
 
-class NumberValidate implements ValidatorInterface
+class IntValidate implements ValidatorInterface
 {
     public static function handle(array $item)
     {

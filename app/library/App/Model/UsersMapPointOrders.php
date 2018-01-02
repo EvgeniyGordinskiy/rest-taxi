@@ -7,13 +7,12 @@ class UsersMapPointOrders extends \App\Mvc\DateTrackingModel
     public $id;
     public $userId;
     public $orderId;
-    public $adress;
     public $lat;
     public $lon;
 
     public function getSource()
     {
-        return 'UsersMapPointOrders';
+        return 'users_map_point_orders';
     }
 
     public function columnMap()
@@ -22,7 +21,6 @@ class UsersMapPointOrders extends \App\Mvc\DateTrackingModel
             'id' => 'id',
             'user_id' => 'userId',
             'order_id' => 'orderId',
-            'adress' => 'adress',
             'lat' => 'lat',
             'lon' => 'lon',
         ];
@@ -38,8 +36,14 @@ class UsersMapPointOrders extends \App\Mvc\DateTrackingModel
         ]);
     }
     
-    public function create($userLocation, $orderId, $userId)
+    public function add(array $userLocation, $orderId, $userId)
     {
-        
+        $userMapPoint = new UsersMapPointOrders();
+        $userMapPoint->lat     = $userLocation['lat']['value'];
+        $userMapPoint->lon     = $userLocation['lon']['value'];
+        $userMapPoint->userId  = $userId;
+        $userMapPoint->orderId = $orderId;
+     
+        return $userMapPoint;
     }
 }

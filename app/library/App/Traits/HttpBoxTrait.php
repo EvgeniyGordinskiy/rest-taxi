@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use PhalconApi\Http\Response;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * Sending prepared messages
@@ -17,11 +18,11 @@ trait HttpBoxTrait
      * @param $error
      * @param int $status
      */
-    public static function sendWithError($error, int $status = 500)
+    public function sendWithError($error, array $payload = [], int $status = 500)
     {
         $response = new Response();
         $response->setStatusCode($status);
-        $response->setJsonContent(['error' => $error]);
+        $response->setJsonContent(['error' => $error, 'items' => $payload]);
         $response->setHeader('Access-Control-Allow-Origin', '*');
         $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         $response->send();
@@ -34,7 +35,7 @@ trait HttpBoxTrait
      * @param array $payload
      * @param int $status
      */
-    public static function sendWithSuccess($msg, array $payload = [], int $status = 200)
+    public function sendWithSuccess($msg, array $payload = [], int $status = 200)
     {
         $response = new Response();
         $response->setStatusCode($status);
@@ -43,5 +44,18 @@ trait HttpBoxTrait
         $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         $response->send();
         die();
+    }
+
+    /**
+     * Take variable from request
+     * @param $prop
+     * @return bool
+     */
+    public function requestTake($prop)
+    {
+        if(!$this->requestData) {
+            $this->requestData = json_decode($this->request->getRawBody());
+        }
+        return $this->requestData->{$prop} ?? null;
     }
 }
