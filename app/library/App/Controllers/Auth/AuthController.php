@@ -14,18 +14,14 @@ class AuthController extends BaseController
 {
     public function authenticate ()
     {
-        $phone = $this->requestData->phone;
-        $password = $this->requestData->password;
-        $this->validating([
-            'phone' => [$phone,
-                ['require', ['min' => 5], ['max' => 30]]],
-            'password' => [
-                $password,
-                ['require',['max' => 50], ['min' => 3]]
-            ]
-        ]);
+        $data = [];
+        $data['phone']['value'] = $this->requestTake('phone');
+        $data['phone']['rule'] = ['require', ['min' => 5], ['max' => 30]];
+        $data['password']['value'] = $this->requestTake('password');
+        $data['password']['rule'] = ['require',['max' => 50], ['min' => 3]];
+        $this->validating($data);
 
-        $user = Auth::auth($phone, $password);
+        $user = Auth::auth($data['phone']['value'], $data['password']['value']);
         if($user instanceof User){
             $this->sendWithSuccess('Authenticated successfully',
                 [
@@ -96,7 +92,7 @@ class AuthController extends BaseController
         }elseif(is_string($user)){
             $this->sendWithError($user);
         }
-        
+
         $this->sendWithError($userData);
     }
 
