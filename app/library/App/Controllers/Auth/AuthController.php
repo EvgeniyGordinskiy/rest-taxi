@@ -5,6 +5,8 @@ namespace App\Controllers\Auth;
 use App\Constants\AclRoles;
 use App\Controllers\BaseController;
 use App\Model\Auth;
+use App\Model\Car;
+use App\Model\Driver;
 use App\Model\User;
 use App\User\AuthService;
 
@@ -63,14 +65,38 @@ class AuthController extends BaseController
         return $this->requestData;
     }
 
+    /**
+     *  Not finish
+     */
     public function registerDriver()
     {
+
         $userData = $this->createUserData();
         $this->validateUserData($userData);
 
         $carData = $this->createCarData();
         $this->validateCarData($carData);
 
+        $user = Auth::register(
+            $userData['firstName']['value'],
+            $userData['lastName']['value'],
+            $userData['phone']['value'],
+            $userData['country']['value'],
+            $userData['password']['value']
+        );
+
+        $car = new Car();
+        $car = $car->add();
+
+        if ($user instanceof User) {
+            $HashId = (new AuthService)->encode($user->id.','.AclRoles::USER);
+            $this->cache->save($user->token, $HashId, null);
+            $driver = new Driver();
+            $driver = $driver->add($user->id);
+        }elseif(is_string($user)){
+            $this->sendWithError($user);
+        }
+        
         $this->sendWithError($userData);
     }
 

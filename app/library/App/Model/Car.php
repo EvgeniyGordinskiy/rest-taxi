@@ -39,4 +39,9 @@ class Car extends \App\Mvc\DateTrackingModel
             'car_photo' => 'carPhoto',
         ];
     }
+    
+    public function add()
+    {
+        
+    }
 }

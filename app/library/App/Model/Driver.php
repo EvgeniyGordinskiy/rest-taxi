@@ -29,4 +29,9 @@ class Driver extends \App\Mvc\DateTrackingModel
             'alias' => 'User',
         ]);
     }
+    
+    public function add($userId)
+    {
+        
+    }
 }
