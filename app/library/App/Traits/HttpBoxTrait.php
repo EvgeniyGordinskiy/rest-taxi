@@ -18,7 +18,7 @@ trait HttpBoxTrait
      * @param $error
      * @param int $status
      */
-    public function sendWithError($error, array $payload = [], int $status = 500)
+    public static function sendWithError($error, array $payload = [], int $status = 500)
     {
         $response = new Response();
         $response->setStatusCode($status);

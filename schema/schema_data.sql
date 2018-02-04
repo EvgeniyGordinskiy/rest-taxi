@@ -1,14 +1,3 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 4529
-#
-# http://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: 127.0.0.1 (MySQL 5.5.5-10.0.21-MariaDB)
-# Database: restTaxi
-# Generation Time: 2016-02-28 12:01:12 +0000
-# ************************************************************
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;

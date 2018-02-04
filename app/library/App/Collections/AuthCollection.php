@@ -14,7 +14,6 @@ class AuthCollection extends ApiCollection
             ->name('Auth')
             ->handler(AuthController::class)
             ->endpoint(ApiEndpoint::post('/apiv1/authenticate', 'authenticate'))
-            ->endpoint(ApiEndpoint::post('/apiv1/registerUser', 'registerUser'))
-            ->endpoint(ApiEndpoint::post('/apiv1/registerDriver', 'registerDriver'));
+            ->endpoint(ApiEndpoint::post('/apiv1/registerUser', 'register'));
     }
 }

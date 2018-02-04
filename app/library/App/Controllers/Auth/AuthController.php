@@ -38,11 +38,12 @@ class AuthController extends BaseController
 
     }
 
-    public function registerUser()
+    public function register()
     {
+
+
         $data = $this->createUserData();
         $this->validateUserData($data);
-
         $user = Auth::register(
             $data['firstName']['value'],
             $data['lastName']['value'],
@@ -50,7 +51,7 @@ class AuthController extends BaseController
             $data['country']['value'],
             $data['password']['value']
         );
-
+        var_dump($user);
         if ($user instanceof User) {
             $HashId = (new AuthService)->encode($user->id.','.AclRoles::USER);
             $this->cache->save($user->token, $HashId, null);
@@ -66,7 +67,7 @@ class AuthController extends BaseController
      */
     public function registerDriver()
     {
-
+        
         $userData = $this->createUserData();
         $this->validateUserData($userData);
 
@@ -139,5 +140,10 @@ class AuthController extends BaseController
         $data['year']['rule']        = ['require', 'string', ['equal' => 4]];
         $data['reg_number']['rule']  = ['require', ['min' => 3], ['max' => 250]];
         $this->validating($data);
+    }
+
+    public function call(Micro $api)
+    {
+        return true;
     }
 }

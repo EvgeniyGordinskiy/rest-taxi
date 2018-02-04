@@ -28,7 +28,7 @@ class ServiceBootstrap implements BootstrapInterface
          * @description Config - \Phalcon\Config
          */
         $di->setShared(Services::CONFIG, $config);
-
+            
         /**
          * @description Phalcon - \Phalcon\Db\Adapter\Pdo\Mysql
          */
@@ -72,7 +72,6 @@ class ServiceBootstrap implements BootstrapInterface
          * @description Phalcon - EventsManager
          */
         $di->setShared(Services::EVENTS_MANAGER, function () use ($di, $config) {
-
             return new EventsManager;
         });
 

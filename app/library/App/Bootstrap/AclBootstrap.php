@@ -30,5 +30,6 @@ class AclBootstrap implements BootstrapInterface
         $acl->addRole(new Acl\Role(AclRoles::DRIVER), $authorizedRole);
 
         $acl->mountMany($api->getCollections());
+        
     }
 }

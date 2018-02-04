@@ -1,5 +1,7 @@
 <?php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /** @var \Phalcon\Config $config */
 $config = null;
 
@@ -70,7 +72,6 @@ try {
 
     $bootstrap->run($app, $di, $config);
 
-    
     // Start application
     $app->handle();
 
@@ -102,6 +103,7 @@ try {
     $response->setErrorContent($e, $debugMode);
 }
 finally {
+    
 
     // Send response
     if (!$response->isSent()) {
