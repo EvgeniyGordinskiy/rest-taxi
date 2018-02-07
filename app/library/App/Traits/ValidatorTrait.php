@@ -15,6 +15,8 @@ trait ValidatorTrait
 {
     use HttpBoxTrait;
 
+    private $errorsValidate = [];
+
     /**
      * Validate array of parameters
      * @param array $items
@@ -23,6 +25,14 @@ trait ValidatorTrait
     {
         foreach ($items as $key => $item) {
             $this->check($item, $key);
+        }
+
+        if(count($this->errorsValidate) > 0) {
+            $errors = [];
+            foreach ($this->errorsValidate as $error) {
+                $errors =  array_merge($errors,ErrorsValidate::getError($error['rule'], $error['name']));
+            }
+            self::sendWithError('Error',$errors, 400);
         }
     }
 
@@ -42,7 +52,6 @@ trait ValidatorTrait
                     return true;
                 }
                 foreach ($item['rule'] as $rule) {
-                    $nameMethod = [];
                     $valueMethod = [];
                     $nameMethod = $rule;
                     $valueMethod[] = $item['value'];
@@ -52,14 +61,7 @@ trait ValidatorTrait
                     }
                     $class = 'App\\Validate\\' . ucfirst(strtolower($nameMethod)) . 'Validate';
                     $obj = new $class();
-                    if ($obj instanceof ValidatorInterface) {
-                        $result = call_user_func_array([$obj, 'handle'], [$valueMethod]);
-                        if (!$result) {
-                            ErrorsValidate::message($rule, $name);
-                        }
-                    } else {
-                        $this->sendWithError("Class $class must be instance of ValidatorInterface");
-                    }
+                    $this->detect_result($obj, $valueMethod, $rule, $name);
                 }
             }
         }
@@ -99,6 +101,14 @@ trait ValidatorTrait
             return true;
         }
         return false;
+    }
+
+    protected function detect_result(ValidatorInterface $validator, $valueMethod, $rule, $name)
+    {
+        $result = call_user_func_array([$validator, 'handle'], [$valueMethod]);
+        if (!$result) {
+            $this->errorsValidate[] = ['rule' => $rule, 'name' => $name];
+        }
     }
 
 }

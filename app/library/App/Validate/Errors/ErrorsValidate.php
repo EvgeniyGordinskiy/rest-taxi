@@ -8,17 +8,19 @@ class ErrorsValidate
 {
     use HttpBoxTrait;
     
-    public static function message($item, string $name)
+    public static function getError($item, string $name)
     {
+        $error = '';
         $name = lcfirst($name);
         if(is_array($item)){
-          self::handleArray($item, $name);
+         $error = self::handleArray($item, $name);
         }
 
         if(is_string($item)){
-            self::handleString($item, $name);
+            $error = self::handleString($item, $name);
         }
-
+        
+        return  $error;
     }
 
     private static function handleArray(array $item, string $name)
@@ -27,16 +29,16 @@ class ErrorsValidate
         $valueMethod = $item[$nameMethod];
         switch ($nameMethod) {
             case 'min':
-                self::sendWithError("$name must be bigger than $valueMethod", [$name => "$name must be bigger than $valueMethod"]);
+                return [$name => "$name must be bigger than $valueMethod"];
                 break;
             case 'max':
-                self::sendWithError("$name must be less than $valueMethod", [$name => "$name must be less than $valueMethod"]);
+                return [$name => "$name must be less than $valueMethod"];
                 break;
             case 'confirm':
-                self::sendWithError("$name must be confirm", [$name => "$name must be confirm"]);
+                return [$name => "$name must be confirm"];
                 break;
             default:
-                self::sendWithError("$name error validating", [$name => "$name error validating"]);
+                return [$name => "$name error validating"];
                 break;
         }
     }
@@ -45,19 +47,19 @@ class ErrorsValidate
     {
         switch ($item) {
             case 'integer':
-                self::sendWithError("$name must be an integer",  [$name => "$name must be an integer"]);
+                return [$name => "$name must be an integer"];
                 break;
             case 'require':
-                self::sendWithError("$name is required", [$name => "$name is required"]);
+                return [$name => "$name is required"];
                 break;
             case 'string':
-                self::sendWithError("$name must be an integer",  [$name => "$name must be an integer"]);
+                return [$name => "$name must be an integer"];
                 break;
             case 'email':
-                self::sendWithError("Incorrect E-Mail", [$name => "Incorrect E-Mail"]);
+                return [$name => "Incorrect E-Mail"];
                 break;
             default:
-                self::sendWithError("$name error validating",  [$name => "$name error validating"]);
+                return [$name => "$name error validating"];
                 break;
         }
     }
