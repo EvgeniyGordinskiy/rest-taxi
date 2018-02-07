@@ -39,9 +39,22 @@ class Car extends \App\Mvc\DateTrackingModel
             'car_photo' => 'carPhoto',
         ];
     }
-    
-    public function add()
+
+    public function add(string $status, string $color, string $regNumber, int $year, string $brand, string $model,
+                               string $currency, string $plantingCosts, string $costsPer1, string $carPhoto) : Car
     {
-        
+        $car = new self();
+        $car->color = $color;
+        $car->status = $status;
+        $car->regNumber = $regNumber;
+        $car->year = $year;
+        $car->brand = $brand;
+        $car->model = $model;
+        $car->currency = $currency;
+        $car->plantingCosts = $plantingCosts;
+        $car->costsPer1 = $costsPer1;
+        $car->carPhoto = $carPhoto;
+        $car->save();
+        return $car;
     }
 }

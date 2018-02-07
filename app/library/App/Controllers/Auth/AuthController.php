@@ -40,8 +40,6 @@ class AuthController extends BaseController
 
     public function register()
     {
-
-
         $data = $this->createUserData();
         $this->validateUserData($data);
         $user = Auth::register(
@@ -51,50 +49,30 @@ class AuthController extends BaseController
             $data['country']['value'],
             $data['password']['value']
         );
-        var_dump($user);
         if ($user instanceof User) {
             $HashId = (new AuthService)->encode($user->id.','.AclRoles::USER);
-            $this->cache->save($user->token, $HashId, null);
-            $this->sendWithSuccess('User create successfully');
+//            $this->cache->save($user->token, $HashId, null);
+            if(isset($data['driver'])) {
+                $this->register_driver($user, $data['driver']);
+            }else{
+                $this->sendWithSuccess('User create successfully');
+            }
         }elseif(is_string($user)){
             $this->sendWithError($user);
         }
         return $this->requestData;
     }
 
-    /**
-     *  Not finish
-     */
-    public function registerDriver()
-    {
-        
-        $userData = $this->createUserData();
-        $this->validateUserData($userData);
 
+    public function register_driver(User $user)
+    {
         $carData = $this->createCarData();
         $this->validateCarData($carData);
 
-        $user = Auth::register(
-            $userData['firstName']['value'],
-            $userData['lastName']['value'],
-            $userData['phone']['value'],
-            $userData['country']['value'],
-            $userData['password']['value']
-        );
-
         $car = new Car();
-        $car = $car->add();
+        $car->save($carData);
 
-        if ($user instanceof User) {
-            $HashId = (new AuthService)->encode($user->id.','.AclRoles::USER);
-            $this->cache->save($user->token, $HashId, null);
-            $driver = new Driver();
-            $driver = $driver->add($user->id);
-        }elseif(is_string($user)){
-            $this->sendWithError($user);
-        }
-
-        $this->sendWithError($userData);
+        $this->sendWithSuccess('Driver create successfully');
     }
 
     protected function createUserData()
