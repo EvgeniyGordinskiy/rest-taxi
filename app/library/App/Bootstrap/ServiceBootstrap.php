@@ -2,7 +2,9 @@
 
 namespace App\Bootstrap;
 
+use App\User\FileService;
 use Phalcon\Config;
+use PhalconApi\Http\Response;
 use PhalconRest\Api;
 use Phalcon\DiInterface;
 use App\BootstrapInterface;
@@ -58,38 +60,18 @@ class ServiceBootstrap implements BootstrapInterface
         });
 
         /**
-         * @description Phalcon - \Phalcon\Mvc\View\Simple
-         */
-        $di->set(Services::VIEW, function () use ($config) {
-
-            $view = new View;
-            $view->setViewsDir($config->get('application')->viewsDir);
-
-            return $view;
-        });
-
-        /**
          * @description Phalcon - EventsManager
          */
         $di->setShared(Services::EVENTS_MANAGER, function () use ($di, $config) {
             return new EventsManager;
         });
-
-        /**
-         * @description Phalcon - TokenParsers
-         */
-        $di->setShared(Services::TOKEN_PARSER, function () use ($di, $config) {
-
-            return new JWTTokenParser($config->get('authentication')->secret, JWTTokenParser::ALGORITHM_HS256);
-        });
-
+        
         /**
          * @description Phalcon - AuthManager
          */
         $di->setShared(Services::AUTH_MANAGER, function () use ($di, $config) {
             $authManager = new AuthManager($config->get('authentication')->expirationTime);
             $authManager->registerAccountType(UsernameAccountType::NAME, new UsernameAccountType);
-
             return $authManager;
         });
 
@@ -97,7 +79,6 @@ class ServiceBootstrap implements BootstrapInterface
          * @description Phalcon - \Phalcon\Mvc\Model\Manager
          */
         $di->setShared(Services::MODELS_MANAGER, function () use ($di) {
-
             $modelsManager = new ModelsManager;
             return $modelsManager->setEventsManager($di->get(Services::EVENTS_MANAGER));
         });
@@ -141,5 +122,21 @@ class ServiceBootstrap implements BootstrapInterface
         };
 
         $di->setShared('cache', $oCache);
+
+        set_error_handler(function( $num, $str, $file, $line, $context ) {
+
+            // Catch notices and warnings
+//            if ($num === 8 || $num === 2) {
+//                new Log(false, $str, $file, $line);
+//            }
+            $response = new Response();
+            $response->setStatusCode(500);
+            $response->setJsonContent(['error' => $str, 'items' => $context]);
+            $response->setHeader('Access-Control-Allow-Origin', '*');
+            $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');  
+            $response->send();
+            die();
+            return false;
+        });
     }
 }

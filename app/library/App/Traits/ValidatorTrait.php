@@ -37,9 +37,10 @@ trait ValidatorTrait
     }
 
     /**
-     * Parse rulles and validating each of them
+     * Parse rules and validating each of them
      * @param $item
      * @param $name
+     * @return bool
      */
     protected function check($item, $name) 
     {

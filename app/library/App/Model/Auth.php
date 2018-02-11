@@ -2,11 +2,16 @@
 
 namespace App\Model;
 
-use App\User\AuthService;
-
 class Auth extends \App\Mvc\DateTrackingModel
 {
-    public static function register(string $firstName, string $lastName, string $phone, string $country_id, string $password)
+    public static function register(
+                string $firstName,
+                string $lastName,
+                string $phone,
+                string $country_id,
+                string $password,
+                $privateToken,
+                $key)
     {
         $res = User::count([
                 'conditions' => 'phone = :phone:',
@@ -14,11 +19,7 @@ class Auth extends \App\Mvc\DateTrackingModel
             ]) > 0;
 
         if (!$res) {
-
-            
             try{
-                $access_token = AuthService::generateKey();
-                $key = AuthService::generateKey(40);
                 $role = Role::findFirst([
                     'name' => 'user'
                 ]);
@@ -30,9 +31,9 @@ class Auth extends \App\Mvc\DateTrackingModel
                     $newUser ->phone      =  $phone;
                     $newUser ->country_id =  $country_id;
                     $newUser ->password   =  md5($password);
-                    $newUser ->key        =  $key;
-                    $newUser -> token     =  $access_token;
-                    $newUser -> roleId     =  $roleId;
+                    $newUser -> token     =  $privateToken;
+                    $newUser -> key       =  $key;
+                    $newUser -> roleId    =  $roleId;
                     $newUser->createdAt   = date('Y-m-d H:i:s');
                     $newUser->updatedAt   = $newUser->createdAt;
                     $newUser ->save();

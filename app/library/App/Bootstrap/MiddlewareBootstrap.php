@@ -22,7 +22,7 @@ class MiddlewareBootstrap implements BootstrapInterface
             ->attach(new CorsMiddleware(['localhost']))
             ->attach(new OptionsResponseMiddleware)
             ->attach(new NotFoundMiddleware)
-//            ->attach(new AuthenticationMiddleware)
+            ->attach(new AuthenticationMiddleware)
             ->attach(new AuthorizationMiddleware)
             ->attach(new FractalMiddleware)
             ->attach(new UrlQueryMiddleware);

@@ -18,13 +18,12 @@ trait HttpBoxTrait
      * @param $error
      * @param int $status
      */
-    public static function sendWithError($error, array $payload = [], int $status = 500)
+    public function sendWithError($error, array $payload = [], int $status = 500)
     {
         $response = new Response();
         $response->setStatusCode($status);
         $response->setJsonContent(['error' => $error, 'items' => $payload]);
-        $response->setHeader('Access-Control-Allow-Origin', '*');
-        $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+        $this->addHeaders($response);
         $response->send();
         die();
     }
@@ -40,8 +39,7 @@ trait HttpBoxTrait
         $response = new Response();
         $response->setStatusCode($status);
         $response->setJsonContent(['Success' => $msg, 'items' => $payload]);
-        $response->setHeader('Access-Control-Allow-Origin', '*');
-        $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+        $this->addHeaders($response);
         $response->send();
         die();
     }
@@ -57,5 +55,11 @@ trait HttpBoxTrait
             $this->requestData = json_decode($this->request->getRawBody());
         }
         return $this->requestData->{$prop} ?? null;
+    }
+
+    private function addHeaders(Response $response)
+    {
+        $response->setHeader('Access-Control-Allow-Origin', '*');
+        $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
     }
 }

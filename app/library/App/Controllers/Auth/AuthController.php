@@ -4,11 +4,12 @@ namespace App\Controllers\Auth;
 
 use App\Constants\AclRoles;
 use App\Controllers\BaseController;
+use App\Exceptions\JWTAuthException;
 use App\Model\Auth;
 use App\Model\Car;
 use App\Model\Driver;
 use App\Model\User;
-use App\User\AuthService;
+use App\User\JWTService;
 
 class AuthController extends BaseController
 {
@@ -23,13 +24,20 @@ class AuthController extends BaseController
 
         $user = Auth::auth($data['phone']['value'], $data['password']['value']);
         if($user instanceof User){
+            $authUser =  [
+                'first_name' => $user->firstName,
+                'last_name'  => $user->lastName,
+                'phone'      => $user->phone,
+                'country_id' => $user->country_id
+            ];
+            $jwt = (new JWTService($authUser))->encode($user->key, $user->token);
             $this->sendWithSuccess('Authenticated successfully',
                 [
                     'first_name' => $user->firstName,
                     'last_name'  => $user->lastName,
-                    'token'      => $user->token,
                     'phone'      => $user->phone,
-                    'country_id' => $user->country_id
+                    'country_id' => $user->country_id,
+                    'jwt'        => $jwt
                 ]);
         }elseIf(is_string($user)){
             $this->sendWithError($user, 401);
@@ -42,16 +50,18 @@ class AuthController extends BaseController
     {
         $data = $this->createUserData();
         $this->validateUserData($data);
+        $privateToken = JWTService::create_private_token();
+        $uId = uniqid();
         $user = Auth::register(
             $data['firstName']['value'],
             $data['lastName']['value'],
             $data['phone']['value'],
             $data['country']['value'],
-            $data['password']['value']
+            $data['password']['value'],
+            $privateToken,
+            $uId
         );
         if ($user instanceof User) {
-            $HashId = (new AuthService)->encode($user->id.','.AclRoles::USER);
-//            $this->cache->save($user->token, $HashId, null);
             if(isset($data['driver'])) {
                 $this->register_driver($user, $data['driver']);
             }else{
