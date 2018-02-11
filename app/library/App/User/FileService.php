@@ -19,7 +19,7 @@ class FileService extends \SplFileObject
 				throw new FileException(sprintf('Unable to create the "%s" directory', $path));
 			}
 		}
-		
+
 		parent::__construct($file, $open_mode, $use_include_path);
 	}
 	
@@ -33,8 +33,9 @@ class FileService extends \SplFileObject
 				throw new FileException('Cant to block file');
 			}
 		}
-		
-		return parent::fwrite($str, $length);
+		$bytes = parent::fwrite($str, $length);
+		$this->flock(LOCK_UN);
+		return $bytes;
 	}
 	
 }
