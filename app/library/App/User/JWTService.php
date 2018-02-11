@@ -6,7 +6,7 @@ use App\Exceptions\FileException;
 use App\Exceptions\JWTAuthException;
 use Firebase\JWT\JWT;
 
-class JWTService
+class JWTService extends \PhalconApi\User\Service
 {
     protected $jwt;
     protected $publicKey;
@@ -96,11 +96,7 @@ class JWTService
         
         $this->write_public_key($publicToken, $uId);
         
-        if(is_null($keyId)){
-            $keyId = $this->config('kid');
-        }
-        
-        $token = $this->jwt->encode($this->payload, $private_token, $alg, $keyId, $head) ;
+        $token = $this->jwt->encode($this->payload, $private_token, $alg, $uId, $head) ;
         
         if ( !$token ) {
             throw new JWTAuthException();
@@ -132,9 +128,9 @@ class JWTService
      */
     private function write_public_key($publicToken, $uId)
     {
-        $file = $this->config('path')['usersPublicKey']."/$uId";
+        $file = $this->url->getBaseUri()."../../../storage/users_public_keys/$uId.txt";
 
-        if(!file_exists($file)){
+        if(file_exists($file)){
             $newFile = new FileService($file, 'a');
             $bytes = $newFile->write($publicToken);
         }else{

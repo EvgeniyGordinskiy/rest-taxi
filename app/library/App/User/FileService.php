@@ -19,7 +19,7 @@ class FileService extends \SplFileObject
 				throw new FileException(sprintf('Unable to create the "%s" directory', $path));
 			}
 		}
-
+		
 		parent::__construct($file, $open_mode, $use_include_path);
 	}
 	
