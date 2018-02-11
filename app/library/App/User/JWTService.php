@@ -130,12 +130,14 @@ class JWTService extends \PhalconApi\User\Service
     {
         $file = $this->url->getBaseUri()."../../../storage/users_public_keys/$uId.txt";
 
-        if(file_exists($file)){
+        if(!file_exists($file)){
             $newFile = new FileService($file, 'a');
             $bytes = $newFile->write($publicToken);
         }else{
             $newFile = fopen($file, 'a');
+            flock($newFile,LOCK_EX);
             $bytes = fwrite($newFile, $publicToken);
+            flock($newFile,LOCK_UN);
             fclose($newFile);
         }
 
