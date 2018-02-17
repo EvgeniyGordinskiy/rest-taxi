@@ -5,22 +5,22 @@ namespace App\Auth;
 use App\Constants\Services;
 use Phalcon\Di;
 
-class EmailAccountType implements \PhalconApi\Auth\AccountType
+class PhoneAccountType implements \PhalconApi\Auth\AccountType
 {
-    const NAME = "useremail";
+    const NAME = "userphone";
 
     public function login($data)
     {
         /** @var \Phalcon\Security $security */
         $security = Di::getDefault()->get(Services::SECURITY);
 
-        $email = $data[Manager::LOGIN_DATA_EMAIL];
+        $phone = $data[Manager::LOGIN_DATA_PHONE];
         $password = $data[Manager::LOGIN_DATA_PASSWORD];
 
         /** @var \App\Model\User $user */
         $user = \App\Model\User::findFirst([
-            'conditions' => 'email = :email:',
-            'bind' => ['email' => $email]
+            'conditions' => 'phone = :phone:',
+            'bind' => ['phone' => $phone]
         ]);
 
         if (!$user) {

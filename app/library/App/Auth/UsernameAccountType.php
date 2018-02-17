@@ -11,7 +11,6 @@ class UsernameAccountType implements \PhalconApi\Auth\AccountType
 
     public function login($data)
     {
-
         /** @var \Phalcon\Security $security */
         $security = Di::getDefault()->get(Services::SECURITY);
 

@@ -11,13 +11,15 @@ class UserController extends BaseController
         return $this->createResourceResponse($this->userService->getDetails());
     }
 
-    public function authenticate()
+    public function login()
     {
-        $username = $this->request->getUsername();
-        $password = $this->request->getPassword();
-       
-        $session = $this->authManager->loginWithUsernamePassword(\App\Auth\UsernameAccountType::NAME, $username,
-            $password);
+        $data['phone']['value'] = $this->inputPost->phone;
+        $data['phone']['rule'] = ['require', ['min' => 5], ['max' => 30]];
+        $data['password']['value'] = $this->inputPost->password;
+        $data['password']['rule'] = ['require', ['min' => 5], ['max' => 30]];
+        $this->validator->validating($data);
+        $session = $this->authManager->loginWithPhonePassword(\App\Auth\PhoneAccountType::NAME,  $data['phone']['value'],
+            $data['password']['value'] );
 
         $transformer = new \App\Transformers\UserTransformer;
         $transformer->setModelClass('App\Model\User');
@@ -30,8 +32,21 @@ class UserController extends BaseController
             'user' => $user
         ];
 
-        return $this->createArrayResponse($response, 'data');
+        return $this->response->setJsonContent($response, 'data');
     }
- 
+    
+    public function register()
+    {
 
+        return $this->response->setJsonContent(['register'], 'data');
+    }
+
+    public function whitelist()
+    {
+        return [
+            'firstName',
+            'lastName',
+            'password'
+        ];
+    }
 }

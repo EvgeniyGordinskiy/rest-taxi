@@ -19,7 +19,9 @@ try {
     define("CONFIG_DIR", APP_DIR . '/configs');
 
     define('APPLICATION_ENV', getenv('APPLICATION_ENV') ?: 'development');
+
     // Autoload dependencies
+    require VENDOR_DIR . '/autoload.php';
 
     $loader = new \Phalcon\Loader();
 
@@ -28,8 +30,7 @@ try {
     ]);
 
     $loader->registerDirs([
-        APP_DIR . '/views/',
-        APP_DIR . '/library/App/Validate',
+        APP_DIR . '/views/'
     ]);
 
     $loader->register();
@@ -43,8 +44,6 @@ try {
 
     $config = new Phalcon\Config(include_once $configPath);
 
-    define("AUTH_KEY", $config->authentication->secretius);
-
     $envConfigPath = CONFIG_DIR . '/server.' . APPLICATION_ENV . '.php';
 
     if (!is_readable($envConfigPath)) {
@@ -52,8 +51,7 @@ try {
     }
 
     $override = new Phalcon\Config(include_once $envConfigPath);
-    $loader   = require_once __DIR__.'./../vendor/autoload.php';
-    
+
     $config = $config->merge($override);
 
 
@@ -71,7 +69,7 @@ try {
     );
 
     $bootstrap->run($app, $di, $config);
-
+  
     // Start application
     $app->handle();
 
@@ -103,7 +101,6 @@ try {
     $response->setErrorContent($e, $debugMode);
 }
 finally {
-    
 
     // Send response
     if (!$response->isSent()) {

@@ -2,10 +2,12 @@
 
 namespace App\Bootstrap;
 
-use App\User\FileService;
+use App\Auth\EmailAccountType;
+use App\Auth\PhoneAccountType;
+use App\Services\Validator\Validator;
 use Phalcon\Config;
-use PhalconApi\Http\Response;
 use PhalconRest\Api;
+use Phalcon\Http\Response;
 use Phalcon\DiInterface;
 use App\BootstrapInterface;
 use App\Constants\Services;
@@ -15,12 +17,10 @@ use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View\Simple as View;
 use App\User\Service as UserService;
 use App\Auth\Manager as AuthManager;
-use Phalcon\Cache\Backend\Redis;
 use Phalcon\Events\Manager as EventsManager;
 use League\Fractal\Manager as FractalManager;
 use Phalcon\Mvc\Model\Manager as ModelsManager;
 use PhalconApi\Auth\TokenParsers\JWTTokenParser;
-
 
 class ServiceBootstrap implements BootstrapInterface
 {
@@ -30,7 +30,7 @@ class ServiceBootstrap implements BootstrapInterface
          * @description Config - \Phalcon\Config
          */
         $di->setShared(Services::CONFIG, $config);
-            
+
         /**
          * @description Phalcon - \Phalcon\Db\Adapter\Pdo\Mysql
          */
@@ -60,18 +60,39 @@ class ServiceBootstrap implements BootstrapInterface
         });
 
         /**
+         * @description Phalcon - \Phalcon\Mvc\View\Simple
+         */
+        $di->set(Services::VIEW, function () use ($config) {
+
+            $view = new View;
+            $view->setViewsDir($config->get('application')->viewsDir);
+
+            return $view;
+        });
+
+        /**
          * @description Phalcon - EventsManager
          */
         $di->setShared(Services::EVENTS_MANAGER, function () use ($di, $config) {
+
             return new EventsManager;
         });
-        
+
+        /**
+         * @description Phalcon - TokenParsers
+         */
+        $di->setShared(Services::TOKEN_PARSER, function () use ($di, $config) {
+
+            return new JWTTokenParser($config->get('authentication')->secret, JWTTokenParser::ALGORITHM_HS256);
+        });
+
         /**
          * @description Phalcon - AuthManager
          */
         $di->setShared(Services::AUTH_MANAGER, function () use ($di, $config) {
+
             $authManager = new AuthManager($config->get('authentication')->expirationTime);
-            $authManager->registerAccountType(UsernameAccountType::NAME, new UsernameAccountType);
+            $authManager->registerAccountType(PhoneAccountType::NAME, new PhoneAccountType());
             return $authManager;
         });
 
@@ -79,6 +100,7 @@ class ServiceBootstrap implements BootstrapInterface
          * @description Phalcon - \Phalcon\Mvc\Model\Manager
          */
         $di->setShared(Services::MODELS_MANAGER, function () use ($di) {
+
             $modelsManager = new ModelsManager;
             return $modelsManager->setEventsManager($di->get(Services::EVENTS_MANAGER));
         });
@@ -98,45 +120,11 @@ class ServiceBootstrap implements BootstrapInterface
          * @description PhalconRest - \PhalconRest\User\Service
          */
         $di->setShared(Services::USER_SERVICE, new UserService);
+        
+        /**
+         * @description PhalconRest - \PhalconRest\User\Service
+         */
+        $di->setShared(Services::VALIDATOR, new Validator());
 
-        $asRedisConf = array(
-            'host' => 'localhost',
-            'port' => 6379,
-            'auth' => 'daughter123',  // doeasn't work 'auth' => 'daughter123',
-            'persistent' => false,
-            'statsKey' => '_dfe_',
-            'index' => 1
-        );
-
-        $oCache = function () use($asRedisConf) {
-
-            //$oFrontCache = new Phalcon\Cache\Frontend\Output(array(
-            //$oFrontCache = new Phalcon\Cache\Frontend\Data(array(
-            $oFrontCache = new \Phalcon\Cache\Frontend\Igbinary(array(
-                'lifetime' => 36000,
-                'prefix'   => 'fe.'
-            ));
-
-            $oRedis = new \Phalcon\Cache\Backend\Redis($oFrontCache, array('redis' => $asRedisConf));
-            return $oRedis;
-        };
-
-        $di->setShared('cache', $oCache);
-
-        set_error_handler(function( $num, $str, $file, $line, $context ) {
-
-            // Catch notices and warnings
-//            if ($num === 8 || $num === 2) {
-//                new Log(false, $str, $file, $line);
-//            }
-            $response = new Response();
-            $response->setStatusCode(500);
-            $response->setJsonContent(['error' => $str, 'items' => $context]);
-            $response->setHeader('Access-Control-Allow-Origin', '*');
-            $response->setHeader('Access-Control-Allow-Headers', 'X-Requested-With');  
-            $response->send();
-            die();
-            return false;
-        });
     }
 }

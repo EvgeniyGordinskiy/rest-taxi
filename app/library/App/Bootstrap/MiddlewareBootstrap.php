@@ -19,13 +19,12 @@ class MiddlewareBootstrap implements BootstrapInterface
     public function run(Api $api, DiInterface $di, Config $config)
     {
         $api
-            ->attach(new CorsMiddleware(['localhost']))
+            ->attach(new CorsMiddleware($config->cors->allowedOrigins->toArray()))
             ->attach(new OptionsResponseMiddleware)
             ->attach(new NotFoundMiddleware)
             ->attach(new AuthenticationMiddleware)
             ->attach(new AuthorizationMiddleware)
             ->attach(new FractalMiddleware)
             ->attach(new UrlQueryMiddleware);
-
     }
 }

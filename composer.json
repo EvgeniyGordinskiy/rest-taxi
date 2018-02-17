@@ -8,15 +8,10 @@
     "require": {
         "redound/phalcon-rest": "^2.0.0",
         "league/fractal": "^0.13.0",
-        "firebase/php-jwt": "^3.0"
+        "firebase/php-jwt": "^3.0",
     },
     "require-dev": {
         "codeception/codeception": "^2.1"
-    },
-    "autoload": {
-        "psr-0": {
-            "App\\": "app/library/App/"
-        }
     },
     "authors": [
         {

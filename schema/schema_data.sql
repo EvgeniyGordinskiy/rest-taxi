@@ -1,3 +1,14 @@
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 4529
+#
+# http://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: 127.0.0.1 (MySQL 5.5.5-10.0.21-MariaDB)
+# Database: phalcon_rest_boilerplate
+# Generation Time: 2016-02-28 12:01:12 +0000
+# ************************************************************
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -9,158 +20,88 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-DROP TABLE IF EXISTS `wishes`;
+# Dump of table photo
+# ------------------------------------------------------------
 
-CREATE TABLE `wishes` (
+DROP TABLE IF EXISTS `photo`;
+
+CREATE TABLE `photo` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime DEFAULT now(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `title` varchar(255) DEFAULT NULL,
+  `album_id` int(11) unsigned NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `wishes` WRITE;
-/*!40000 ALTER TABLE `wishes` DISABLE KEYS */;
+LOCK TABLES `photo` WRITE;
+/*!40000 ALTER TABLE `photo` DISABLE KEYS */;
 
-INSERT INTO `wishes` (`name`)
+INSERT INTO `photo` (`id`, `title`, `album_id`, `created_at`, `updated_at`)
 VALUES
-	('wish 1'),
-	('wish 2');
+	(1,'Photo of Album 1',1,'2016-02-28 11:34:38','2016-02-28 11:34:38'),
+	(2,'Another Photo of Album 1',1,'2016-02-28 11:34:38','2016-02-28 11:34:38'),
+	(3,'Photo of Album 2',2,'2016-02-28 11:34:38','2016-02-28 11:34:38');
 
-/*!40000 ALTER TABLE `wishes` ENABLE KEYS */;
+/*!40000 ALTER TABLE `photo` ENABLE KEYS */;
 UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `payment_types`;
 
-CREATE TABLE `payment_types` (
+# Dump of table album
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `album`;
+
+CREATE TABLE `album` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime DEFAULT now(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `title` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `payment_types` WRITE;
-/*!40000 ALTER TABLE `payment_types` DISABLE KEYS */;
+LOCK TABLES `album` WRITE;
+/*!40000 ALTER TABLE `album` DISABLE KEYS */;
 
-INSERT INTO `payment_types` (`name`)
+INSERT INTO `album` (`id`, `title`, `created_at`, `updated_at`)
 VALUES
-	('cash'),
-	('card');
+	(1,'Album 1','2016-02-28 11:28:33','2016-02-28 11:28:33'),
+	(2,'Album 2','2016-02-28 11:28:33','2016-02-28 11:28:33');
 
-/*!40000 ALTER TABLE `payment_types` ENABLE KEYS */;
+/*!40000 ALTER TABLE `album` ENABLE KEYS */;
 UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `cars`;
 
-CREATE TABLE `cars` (
+# Dump of table user
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `status` ENUM('0','1') DEFAULT '0',
-  `color` varchar(255) NOT NULL,
-  `reg_number` varchar(255) NOT NULL,
-  `year` char(4) NOT NULL,
-  `brand` varchar(50) NOT NULL,
-  `model` varchar(50) NOT NULL,
-  `currency` varchar(50) NOT NULL,
-  `planting_costs` varchar(50) NOT NULL,
-  `costs_per_1` varchar(50) NOT NULL,
-  `car_photo` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT now(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `role` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `username` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(255) NOT NULL DEFAULT '',
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `cars` WRITE;
-/*!40000 ALTER TABLE `cars` DISABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
-INSERT INTO `cars` (`id`, `status`, `color`, `reg_number`, `year`, `brand`, `model`, `currency`, `planting_costs`, `costs_per_1`, `car_photo`, `created_at`)
+INSERT INTO `user` (`id`, `role`, `email`, `username`, `password`, `first_name`, `last_name`, `location`, `created_at`, `updated_at`)
 VALUES
-	(32, 1,'red', '13565', '1959', 'volvo', 'x5', 'ert', 'planting_costs', 'cost_per_1', '/public/images/photo/car32', now()),
-	(12, 1,'red', '13565', '1959', 'volvo', 'x5', 'ert', 'planting_costs', 'cost_per_1', '/public/images/photo/car32', now());
-/*!40000 ALTER TABLE `cars` ENABLE KEYS */;
+	(1,'User','test@example.com','demo','$2y$10$1/U1yo5yMdXsrsU3RaeULu7dm7UFX1qq3rnfpbQugv7uIPdo2kMcC','Demo','Account',NULL,'2015-12-28 16:20:58',NULL);
+
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
-DROP TABLE IF EXISTS `countries`;
-
-CREATE TABLE `countries` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `code` varchar(10) NOT NULL,
-  `created_at` datetime DEFAULT now(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `countries` WRITE;
-/*!40000 ALTER TABLE `countries` DISABLE KEYS */;
-
-INSERT INTO `countries` (`id`, `name`, `code`)
-VALUES
-	(13, 'Ukraine', 'UA'),
-    (4, 'Moldova', 'MD');
-    	/*!40000 ALTER TABLE `countries` ENABLE KEYS */;
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `regions`;
-
-CREATE TABLE `regions` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-   `created_at` datetime DEFAULT now(),
-   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `regions` WRITE;
-/*!40000 ALTER TABLE `regions` DISABLE KEYS */;
-
-INSERT INTO `regions` (`name`)
-VALUES
-	('Dnipropetrovska');
-    	/*!40000 ALTER TABLE `regions` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-DROP TABLE IF EXISTS `order_statuses`;
-
-CREATE TABLE `order_statuses` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `created_at` datetime DEFAULT now(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `order_statuses` WRITE;
-/*!40000 ALTER TABLE `order_statuses` DISABLE KEYS */;
-
-INSERT INTO `order_statuses` (`name`)
-VALUES
-	('Not confirmed by driver'),
-	('The driver is coming to you');
-    	/*!40000 ALTER TABLE `order_statuses` ENABLE KEYS */;
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `roles`;
-
-CREATE TABLE `roles` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL UNIQUE,
-  `created_at` datetime DEFAULT now(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `roles` WRITE;
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-
-INSERT INTO `roles` (`name`)
-VALUES
-	('user'),
-	('driver');
-    	/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-UNLOCK TABLES;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

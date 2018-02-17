@@ -7,7 +7,6 @@ class AclRoles
     const UNAUTHORIZED = 'Unauthorized';
     const AUTHORIZED = 'Authorized';
     const USER = 'User';
-    const DRIVER = 'Driver';
     const MANAGER = 'Manager';
     const ADMINISTRATOR = 'Administrator';
 

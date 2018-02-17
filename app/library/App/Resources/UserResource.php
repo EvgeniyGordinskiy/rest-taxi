@@ -21,9 +21,28 @@ class UserResource extends ApiResource {
             ->handler(UserController::class)
             ->itemKey('user')
             ->collectionKey('users')
-//            ->deny(AclRoles::UNAUTHORIZED, AclRoles::USER)
-            ->endpoint(ApiEndpoint::post('/authenticate', 'authenticate')
+            ->deny(AclRoles::UNAUTHORIZED, AclRoles::USER)
+
+            ->endpoint(ApiEndpoint::all()
+                ->allow(AclRoles::USER)
+                ->description('Returns all registered users')
+            )
+            ->endpoint(ApiEndpoint::get('/me', 'me')
+                ->allow(AclRoles::USER)
+                ->description('Returns the currently logged in user')
+            )
+            ->endpoint(ApiEndpoint::post('/login', 'login')
                 ->allow(AclRoles::UNAUTHORIZED)
+                ->deny(AclRoles::AUTHORIZED)
+                ->description('Authenticates user credentials provided in the authorization header and returns an access token')
+                ->exampleResponse([
+                    'token' => 'co126bbm40wqp41i3bo7pj1gfsvt9lp6',
+                    'expires' => 1451139067
+                ])
+            )
+            ->endpoint(ApiEndpoint::post('/register', 'register')
+                ->allow(AclRoles::UNAUTHORIZED)
+                ->deny(AclRoles::AUTHORIZED)
                 ->description('Authenticates user credentials provided in the authorization header and returns an access token')
                 ->exampleResponse([
                     'token' => 'co126bbm40wqp41i3bo7pj1gfsvt9lp6',

@@ -7,7 +7,6 @@ use App\Constants\Services;
 use Phalcon\Acl;
 use Phalcon\Config;
 use Phalcon\DiInterface;
-use Phalcon\Acl\Resource;
 use PhalconRest\Api;
 use App\Constants\AclRoles;
 
@@ -27,9 +26,7 @@ class AclBootstrap implements BootstrapInterface
         $acl->addRole(new Acl\Role(AclRoles::ADMINISTRATOR), $authorizedRole);
         $acl->addRole(new Acl\Role(AclRoles::MANAGER), $authorizedRole);
         $acl->addRole(new Acl\Role(AclRoles::USER), $authorizedRole);
-        $acl->addRole(new Acl\Role(AclRoles::DRIVER), $authorizedRole);
 
         $acl->mountMany($api->getCollections());
-        
     }
 }
