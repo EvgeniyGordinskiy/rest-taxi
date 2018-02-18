@@ -2,20 +2,22 @@
 namespace App\Services\Validator\Lib;
 
 use App\Services\Validator\Validator;
-use PhalconApi\Http\Request;
+use Phalcon\Di;
 
-abstract class ValidatorRequest extends Request
+abstract class ValidatorRequest
 {
 
     protected $inputPost;
+
     /**
      * ValidatorRequest constructor.
      * @param ValidatorInterface $validator
      */
     public function __construct(ValidatorInterface $validator = null)
     {
+        $request = Di::getDefault()->getRequest();
+        $this->inputPost = $request->inputPost;
         $validator = $validator ?? new Validator();
-        $this->inputPost = $this->getJsonRawBody(); 
         $validator->validating($this->handle());
     }
 

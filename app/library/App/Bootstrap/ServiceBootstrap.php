@@ -4,6 +4,7 @@ namespace App\Bootstrap;
 
 use App\Auth\EmailAccountType;
 use App\Auth\PhoneAccountType;
+use App\Services\Request\Request;
 use App\Services\Security\Security;
 use App\Services\Validator\Validator;
 use Phalcon\Config;
@@ -59,6 +60,11 @@ class ServiceBootstrap implements BootstrapInterface
             $url->setBaseUri($config->get('application')->baseUri);
             return $url;
         });
+        
+        /**
+         * @description Phalcon - \Phalcon\Mvc\Url
+         */
+        $di->set(Services::REQUEST, new Request());
 
         /**
          * @description Phalcon - \Phalcon\Mvc\View\Simple

@@ -3,13 +3,11 @@
 namespace App\Collections;
 
 use App\Constants\AclRoles;
-use App\Controllers\ExportController;
-use App\Controllers\UserController;
+use App\Controllers\Auth\AuthController;
 use App\Requests\LoginRequest;
 use App\Requests\RegisterRequest;
 use App\Services\AppEndpoint\AppEndpoint;
 use PhalconRest\Api\ApiCollection;
-use PhalconRest\Api\ApiEndpoint;
 
 class AuthCollection extends ApiCollection
 {
@@ -17,7 +15,7 @@ class AuthCollection extends ApiCollection
     {
         $this
             ->name('Auth')
-            ->handler(UserController::class)
+            ->handler(AuthController::class)
             ->expectsJsonData()
             ->endpoint(AppEndpoint::post('/login', 'login')
                 ->name('login')
