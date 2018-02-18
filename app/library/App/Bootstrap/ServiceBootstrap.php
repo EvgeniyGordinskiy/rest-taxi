@@ -4,6 +4,7 @@ namespace App\Bootstrap;
 
 use App\Auth\EmailAccountType;
 use App\Auth\PhoneAccountType;
+use App\Services\Security\Security;
 use App\Services\Validator\Validator;
 use Phalcon\Config;
 use PhalconRest\Api;
@@ -126,5 +127,21 @@ class ServiceBootstrap implements BootstrapInterface
          */
         $di->setShared(Services::VALIDATOR, new Validator());
 
+        /**
+         * @description PhalconRest - \Phalcon\Cache\Backend\Redis
+         */
+        $di->setShared(Services::CASH, function () use($config) {
+            $oFrontCache = new \Phalcon\Cache\Frontend\Igbinary(array(
+                'lifetime' => 36000,
+                'prefix'   => 'fe.'
+            ));
+            $oRedis = new \Phalcon\Cache\Backend\Redis($oFrontCache, array('redis' => $config->get('redis')));
+            return $oRedis;
+        });
+
+        /**
+         * Security instance
+         */
+        $di->setShared(Services::SECURITY, new Security());
     }
 }

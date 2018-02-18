@@ -3,6 +3,7 @@
 namespace App\Services\Validator;
 
 use Firebase\JWT\JWT;
+use PhalconApi\Auth\Session;
 use PhalconApi\Http\Response;
 
 class JWTService implements \PhalconApi\Auth\TokenParserInterface
@@ -75,6 +76,11 @@ class JWTService implements \PhalconApi\Auth\TokenParserInterface
         $pubToken = $this->create_public_token($private_token);
 
         return strcasecmp($public_token, $pubToken);
+    }
+
+    public function getToken(Session $session)
+    {
+        // TODO: Implement getToken() method.
     }
 
     /**

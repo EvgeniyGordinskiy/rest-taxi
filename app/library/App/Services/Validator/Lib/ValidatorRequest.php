@@ -15,7 +15,7 @@ abstract class ValidatorRequest extends Request
     public function __construct(ValidatorInterface $validator = null)
     {
         $validator = $validator ?? new Validator();
-        $this->inputPost = $this->getJsonRawBody();
+        $this->inputPost = $this->getJsonRawBody(); 
         $validator->validating($this->handle());
     }
 

@@ -3,6 +3,7 @@ namespace App\Services\Resource;
 
 use App\Controllers\BaseController;
 use App\Services\Validator\Lib\ValidatorRequest;
+use PhalconRest\Api\ApiEndpoint;
 use PhalconRest\Api\ApiResource;
 
 class ResourceApp extends ApiResource
@@ -16,7 +17,7 @@ class ResourceApp extends ApiResource
         return $this;
     }
     
-    public function request(ValidatorRequest $request)
+    public function request($request)
     {
         $this->request =  $request;
         return $this;

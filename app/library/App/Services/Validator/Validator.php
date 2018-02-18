@@ -27,7 +27,7 @@ class Validator implements ValidatorInterface
             }
             $response = new Response();
             $response->setStatusCode(400);
-            $response->setJsonContent($errors);
+            $response->setJsonContent(['errors' =>$errors]);
             $response->send();
             die();
         }

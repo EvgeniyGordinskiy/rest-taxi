@@ -3,6 +3,7 @@
 namespace App\Bootstrap;
 
 use App\BootstrapInterface;
+use App\Collections\AuthCollection;
 use App\Collections\ExportCollection;
 use App\Resources\UserResource;
 use App\Resources\AlbumResource;
@@ -17,6 +18,7 @@ class CollectionBootstrap implements BootstrapInterface
     {
         $api
             ->collection(new ExportCollection('/export'))
+            ->collection(new AuthCollection('/auth'))
             ->resource(new UserResource('/users'))
             ->resource(new AlbumResource('/albums'))
             ->resource(new PhotoResource('/photos'));

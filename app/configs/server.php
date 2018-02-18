@@ -19,6 +19,13 @@ return [
         'password' => 'admin',
         'dbname' => 'restTaxi',
     ],
+    'redis' => [
+        'host' => 'localhost',
+        'port' => 6379,
+        'persistent' => false,
+        'statsKey' => '_dfe_',
+        'index' => 1
+    ],
     'cors' => [
         'allowedOrigins' => ['*']
     ]

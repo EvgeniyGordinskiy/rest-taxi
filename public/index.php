@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 /** @var \Phalcon\Config $config */
 $config = null;
 
@@ -57,7 +58,7 @@ try {
 
     // Instantiate application & DI
     $di = new PhalconRest\Di\FactoryDefault();
-    $app = new PhalconRest\Api($di);
+    $app = new \App\Api($di);
 
     // Bootstrap components
     $bootstrap = new App\Bootstrap(
@@ -72,7 +73,6 @@ try {
   
     // Start application
     $app->handle();
-
     // Set appropriate response value
     $response = $app->di->getShared(App\Constants\Services::RESPONSE);
 
