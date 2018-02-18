@@ -2,6 +2,8 @@
 
 namespace App\Resources;
 
+use App\Requests\LoginRequest;
+use App\Services\Resource\ResourceApp;
 use PhalconRest\Api\ApiResource;
 use PhalconRest\Api\ApiEndpoint;
 use App\Model\User;
@@ -9,7 +11,7 @@ use App\Transformers\UserTransformer;
 use App\Controllers\UserController;
 use App\Constants\AclRoles;
 
-class UserResource extends ApiResource {
+class UserResource extends ResourceApp {
 
     public function initialize()
     {
@@ -18,6 +20,7 @@ class UserResource extends ApiResource {
             ->model(User::class)
             ->expectsJsonData()
             ->transformer(UserTransformer::class)
+            ->request(new LoginRequest())
             ->handler(UserController::class)
             ->itemKey('user')
             ->collectionKey('users')

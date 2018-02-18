@@ -13,13 +13,8 @@ class UserController extends BaseController
 
     public function login()
     {
-        $data['phone']['value'] = $this->inputPost->phone;
-        $data['phone']['rule'] = ['require', ['min' => 5], ['max' => 30]];
-        $data['password']['value'] = $this->inputPost->password;
-        $data['password']['rule'] = ['require', ['min' => 5], ['max' => 30]];
-        $this->validator->validating($data);
-        $session = $this->authManager->loginWithPhonePassword(\App\Auth\PhoneAccountType::NAME,  $data['phone']['value'],
-            $data['password']['value'] );
+        $session = $this->authManager->loginWithPhonePassword(\App\Auth\PhoneAccountType::NAME,  $this->inputPost->phone,
+            $this->inputPost->password );
 
         $transformer = new \App\Transformers\UserTransformer;
         $transformer->setModelClass('App\Model\User');

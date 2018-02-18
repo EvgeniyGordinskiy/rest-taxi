@@ -2,10 +2,11 @@
 namespace App\Services\Validator;
 
 use App\Services\Validator\Errors\ErrorsValidate;
+use App\Services\Validator\Lib\ValidatorInterface;
 use App\Services\Validator\Types\TypeInterface;
 use PhalconApi\Http\Response;
 
-class Validator 
+class Validator implements ValidatorInterface
 {
     private $errorsValidate = [];
 
@@ -25,8 +26,10 @@ class Validator
                 $errors =  array_merge($errors,ErrorsValidate::getError($error['rule'], $error['name']));
             }
             $response = new Response();
-            $response->setJsonContent($errors, ['status'=>400]);
+            $response->setStatusCode(400);
+            $response->setJsonContent($errors);
             $response->send();
+            die();
         }
     }
 
