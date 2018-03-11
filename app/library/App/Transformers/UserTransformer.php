@@ -11,6 +11,6 @@ class UserTransformer extends ModelTransformer
 
     protected function excludedProperties()
     {
-        return ['password'];
+        return ['password', 'token', 'key'];
     }
 }

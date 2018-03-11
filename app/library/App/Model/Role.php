@@ -2,30 +2,30 @@
 
 namespace App\Model;
 
-class Photo extends \App\Mvc\DateTrackingModel
+class Role extends \App\Mvc\DateTrackingModel
 {
     public $id;
-    public $title;
-    public $albumId;
+    public $name;
+    public $createdAt;
+    public $updatedAt;
 
     public function getSource()
     {
-        return 'photo';
+        return 'roles';
     }
 
     public function columnMap()
     {
         return parent::columnMap() + [
             'id' => 'id',
-            'title' => 'title',
-            'album_id' => 'albumId'
+            'name' => 'name',
         ];
     }
 
     public function initialize() {
 
-        $this->belongsTo('albumId', Album::class, 'id', [
-            'alias' => 'Album',
+        $this->hasMany('id', UserRoles::class, 'roleId', [
+            'alias' => 'roles',
         ]);
     }
 }

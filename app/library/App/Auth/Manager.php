@@ -2,7 +2,7 @@
 
 namespace App\Auth;
 
-use PhalconApi\Auth\Session;
+use App\Services\Session\SessionRestTaxi as Session;
 use PhalconApi\Exception;
 use PhalconApi\Constants\ErrorCodes;
 class Manager extends \PhalconApi\Auth\Manager
@@ -56,25 +56,19 @@ class Manager extends \PhalconApi\Auth\Manager
         $identity = $account->login($data);
 
         if (!$identity) {
-
             throw new Exception(ErrorCodes::AUTH_LOGIN_FAILED);
         }
 
         $startTime = time();
 
         $session = new Session($accountTypeName, $identity['id'], $startTime, $startTime + $this->sessionDuration);
-        
+        $this->tokenParser->set_private_token($identity['token']);
         $token = $this->tokenParser->getToken($session);
         $session->setToken($token);
 
         $this->session = $session;
-        
-        $this->security->start_session(
-            $identity['id'],
-            [$accountTypeName, $identity['id'], $startTime, $startTime + $this->sessionDuration],
-            $identity['uuid'],
-            $startTime + $this->sessionDuration
-        );
+        $token = $this->tokenParser->create_public_token($identity['token']);
+        $session->start_session($session, $token);
 
         return $this->session;
     }

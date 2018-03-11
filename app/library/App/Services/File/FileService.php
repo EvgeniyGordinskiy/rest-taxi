@@ -1,5 +1,5 @@
 <?php
-namespace App\User;
+namespace App\Services\File;
 
 use App\Exceptions\FileException;
 

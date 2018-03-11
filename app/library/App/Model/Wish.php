@@ -2,28 +2,30 @@
 
 namespace App\Model;
 
-class Album extends \App\Mvc\DateTrackingModel
+class Wish extends \App\Mvc\DateTrackingModel
 {
     public $id;
-    public $title;
+    public $name;
+    public $createdAt;
+    public $updatedAt;
 
     public function getSource()
     {
-        return 'album';
+        return 'wishes';
     }
 
     public function columnMap()
     {
         return parent::columnMap() + [
             'id' => 'id',
-            'title' => 'title'
+            'name' => 'name',
         ];
     }
 
     public function initialize() {
 
-        $this->hasMany('id', Photo::class, 'albumId', [
-            'alias' => 'Photos',
+        $this->hasMany('id', UsersWishes::class, 'wishId', [
+            'alias' => 'wishes',
         ]);
     }
 }

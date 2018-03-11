@@ -27,8 +27,8 @@ class User extends \App\Mvc\DateTrackingModel
             'id' => 'id',
             'phone' => 'phone',
             'username' => 'username',
-            'first_name' => 'firstName',
-            'last_name' => 'lastName',
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
             'country_id' => 'country_id',
             'password' => 'password',
             'key' => 'key',
@@ -42,7 +42,7 @@ class User extends \App\Mvc\DateTrackingModel
         $this->hasMany('id', Driver::class, 'userId', [
             'alias' => 'Driver',
         ]);
-
+        
         $this->hasMany('id', UsersMapPointOrders::class, 'userId', [
             'alias' => 'Order',
         ]);

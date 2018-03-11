@@ -8,5 +8,6 @@ class Services extends \PhalconRest\Constants\Services
     const VIEW = 'view';
     const API_SERVICE = 'api';
     const VALIDATOR = 'validator';
-    const CASH = 'cash';
+    const CACHE = 'cache';
+    const JWT = 'jwt';
 }

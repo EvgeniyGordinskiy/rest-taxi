@@ -7,7 +7,7 @@ use Phalcon\Di;
 abstract class ValidatorRequest
 {
 
-    protected $inputPost;
+    protected $request;
 
     /**
      * ValidatorRequest constructor.
@@ -16,9 +16,10 @@ abstract class ValidatorRequest
     public function __construct(ValidatorInterface $validator = null)
     {
         $request = Di::getDefault()->getRequest();
-        $this->inputPost = $request->inputPost;
+        $this->request = $request;
         $validator = $validator ?? new Validator();
-        $validator->validating($this->handle());
+        $data = $validator->validating($this->handle());
+        $request->setData($data);
     }
 
     /**

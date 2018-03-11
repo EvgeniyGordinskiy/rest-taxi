@@ -22,7 +22,6 @@ class PhoneAccountType implements \PhalconApi\Auth\AccountType
             'conditions' => 'phone = :phone:',
             'bind' => ['phone' => $phone]
         ]);
-
         if (!$user) {
             return null;
         }
@@ -31,7 +30,7 @@ class PhoneAccountType implements \PhalconApi\Auth\AccountType
             return null;
         }
 
-        return (string)$user->id;
+        return ['id' => (string)$user->id, 'token' => (string)$user->token];
     }
 
     public function authenticate($identity)

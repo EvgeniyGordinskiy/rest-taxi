@@ -3,13 +3,17 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
 use App\Model\User;
+use App\Services\JWT\JWTService;
 
 class AuthController extends BaseController
 {
     public function login()
     {
-        $session = $this->authManager->loginWithPhonePassword(\App\Auth\PhoneAccountType::NAME,  $this->inputPost->phone,
-            $this->inputPost->password );
+        $session = $this->authManager->loginWithPhonePassword(
+            \App\Auth\PhoneAccountType::NAME,
+            $this->request->postBody('phone'),
+            $this->request->postBody('password')
+        );
 
         $transformer = new \App\Transformers\UserTransformer;
         $transformer->setModelClass('App\Model\User');
@@ -27,7 +31,12 @@ class AuthController extends BaseController
 
     public function register()
     {
-        $this->response->setStatusCode(500);
-        return $this->response->setJsonContent(['register'], 'data');
+        $data = $this->request->postBody();
+        $data['password'] = $this->security->hash($data['password']);
+        $data['token'] = JWTService::create_private_token();
+        $user = new User();
+        $user->save($data);
+        $this->cache->save($this->db->lastInsertId().'_public_token', JWTService::create_public_token($data['token']));
+        return $this->response->setJsonContent('ok', 'data');
     }
 }

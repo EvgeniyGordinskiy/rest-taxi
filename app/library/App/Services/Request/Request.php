@@ -3,10 +3,23 @@ namespace App\Services\Request;
 
 class Request extends \PhalconApi\Http\Request
 {
-    public $inputPost;
+    protected $inputPost;
 
     public function __construct()
     {
-        $this->inputPost = $this->getJsonRawBody();
+        $this->inputPost = $this->getPostedData();
+    }
+    
+    public function postBody($name = false)
+    {
+        if(!$name){
+            return $this->inputPost;
+        }
+        return $this->inputPost[$name] ?? '';
+    }
+    
+    public function setData(array $data)
+    {
+        $this->inputPost = $data;
     }
 }

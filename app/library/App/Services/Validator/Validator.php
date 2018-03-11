@@ -9,7 +9,7 @@ use PhalconApi\Http\Response;
 class Validator implements ValidatorInterface
 {
     private $errorsValidate = [];
-
+    private $items = [];
     /**
      * Validate array of parameters
      * @param array $items
@@ -31,6 +31,7 @@ class Validator implements ValidatorInterface
             $response->send();
             die();
         }
+        return $this->items;
     }
 
     /**
@@ -106,6 +107,8 @@ class Validator implements ValidatorInterface
         $result = call_user_func_array([$validator, 'handle'], [$valueMethod]);
         if (!$result) {
             $this->errorsValidate[] = ['rule' => $rule, 'name' => $name];
+        }else{
+            $this->items[$name] = $valueMethod[0];
         }
     }
 }

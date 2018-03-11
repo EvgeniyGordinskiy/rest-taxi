@@ -7,6 +7,7 @@ use App\Auth\PhoneAccountType;
 use App\Services\Request\Request;
 use App\Services\Security\Security;
 use App\Services\Validator\Validator;
+use App\Services\JWT\JWTService as JWT;
 use Phalcon\Config;
 use PhalconRest\Api;
 use Phalcon\Http\Response;
@@ -55,7 +56,6 @@ class ServiceBootstrap implements BootstrapInterface
          * @description Phalcon - \Phalcon\Mvc\Url
          */
         $di->set(Services::URL, function () use ($config) {
-
             $url = new UrlResolver;
             $url->setBaseUri($config->get('application')->baseUri);
             return $url;
@@ -90,7 +90,7 @@ class ServiceBootstrap implements BootstrapInterface
          */
         $di->setShared(Services::TOKEN_PARSER, function () use ($di, $config) {
 
-            return new JWTTokenParser($config->get('authentication')->secret, JWTTokenParser::ALGORITHM_HS256);
+            return new JWT();
         });
 
         /**
@@ -136,7 +136,7 @@ class ServiceBootstrap implements BootstrapInterface
         /**
          * @description PhalconRest - \Phalcon\Cache\Backend\Redis
          */
-        $di->setShared(Services::CASH, function () use($config) {
+        $di->setShared(Services::CACHE, function () use($config) {
             $oFrontCache = new \Phalcon\Cache\Frontend\Igbinary(array(
                 'lifetime' => 36000,
                 'prefix'   => 'fe.'
